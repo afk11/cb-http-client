@@ -1,36 +1,40 @@
 var httpify = require('httpify')
-var jsend = require('jsend')
 var qs = require('querystring')
+var typeforce = require('typeforce')
+var xtend = require('xtend')
 
-function Node (base, queryParams) {
+function Client (base, queryParams) {
   var queryString = queryParams ? ('?' + qs.stringify(queryParams)) : ''
   var self = this
 
   function req (url, body, callback, deconstruct) {
-    var options = {
+    var options = xtend({
       method: 'POST',
       url: base + url + queryString,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
-    }
-
-    // extend the options object if necessary
-    for (var option in self.xhrOptions) {
-      options[option] = self.xhrOptions[option]
-    }
+    }, self.xhrOptions)
 
     httpify(options, function (err, res) {
       if (err) return callback(err)
       if (res.statusCode !== 200) return callback(new Error('Error ' + res.statusCode))
 
       var body = res.body
+      try {
+        typeforce({
+          status: 'String',
+          data: '?Object'
+        }, body, true)
 
-      if (!jsend.isValid(body)) return callback(new Error('Invalid JSend response'))
+      } catch (e) {
+        return callback(e)
+      }
+
       if (body.status === 'fail' || body.status === 'error') {
         return callback(new Error(body.message || body.data))
       }
 
-      return callback(undefined, deconstruct ? body.data[0] : body.data)
+      return callback(null, deconstruct ? body.data[0] : body.data)
     })
   }
 
@@ -93,4 +97,4 @@ function Node (base, queryParams) {
   this.xhrOptions = {}
 }
 
-module.exports = Node
+module.exports = Client
