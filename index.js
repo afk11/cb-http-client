@@ -25,7 +25,6 @@ function Client (base, queryParams) {
           status: 'String',
           data: '?Object'
         }, body, true)
-
       } catch (e) {
         return callback(e)
       }

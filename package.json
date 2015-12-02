@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/common-blockchain/cb-http-client",
   "dependencies": {
+    "cb-tester": "^0.2.25",
     "httpify": "^1.0.0",
     "typeforce": "^1.1.3",
     "xtend": "^4.0.0"
