@@ -29,11 +29,9 @@ function Client (base, queryParams) {
         return callback(e)
       }
 
-      if (body.status === 'fail' || body.status === 'error') {
-        return callback(new Error(body.message || body.data))
-      }
+      if (body.status !== 'success') return callback(new Error(body.data))
 
-      return callback(null, deconstruct ? body.data[0] : body.data)
+      callback(null, deconstruct ? body.data[0] : body.data)
     })
   }
 
