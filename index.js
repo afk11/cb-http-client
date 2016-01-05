@@ -29,7 +29,7 @@ function Client (base, queryParams) {
         return callback(e)
       }
 
-      if (body.status !== 'success') return callback(new Error(body.data))
+      if (body.status !== 'success') return callback(new Error(body.data && body.data.msg || body.data))
 
       callback(null, deconstruct ? body.data[0] : body.data)
     })
