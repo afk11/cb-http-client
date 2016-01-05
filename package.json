@@ -1,6 +1,6 @@
 {
   "name": "cb-http-client",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Common-blockchain HTTP client for a cb-http-router",
   "main": "./index.js",
   "scripts": {
